@@ -1,14 +1,7 @@
-# Spring Boot and Vaadin course source code
 
-This repository contains the source code for the [Building Modern Web Applications With Spring Boot and Vaadin](https://vaadin.com/docs/latest/flow/tutorials/in-depth-course).
-
-*Live demo:* https://crm.demo.vaadin.com
-
-## Branches
-
-- The main branch contains the source code for the latest Vaadin release
-- The `v14` branch contains the source code for Vaadin 14
-
-
-## Text tutorial
-You can find a text version of the tutorial in the [Vaadin Documentation](https://vaadin.com/docs/latest/flow/tutorials/in-depth-course).
+•	Demonstrate ability to elicit and formulate requirements and scope of software projects. 
+•	Effectively use software engineering tools to develop and manage a software project. 
+•	Demonstrate ability to effectively work in a team environment. 
+•	Illustrate and apply concepts of ethics. 
+•	Demonstrate competency in oral and written communications. 
+•	Describe the potential impacts of computing solutions on individuals, organizations and society
