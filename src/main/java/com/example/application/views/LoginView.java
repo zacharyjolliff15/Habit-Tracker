@@ -7,6 +7,7 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 @Route("login") 
@@ -18,13 +19,14 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
 	public LoginView(){
 		addClassName("login-view");
+		this.getElement().getThemeList().add("dark");
 		setSizeFull(); 
 		setAlignItems(Alignment.CENTER);
 		setJustifyContentMode(JustifyContentMode.CENTER);
-
 		login.setAction("login"); 
-
 		add(new H1("Habit Tracker"), login);
+		add(new RouterLink("New user? Register Here", RegisterView.class));
+		
 	}
 
 	@Override
