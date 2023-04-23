@@ -41,16 +41,6 @@ public class HabitTracker extends VerticalLayout {
         add(nameField, startDatePicker, endDatePicker, frequencyField, addButton, habitGrid);
     }
     
-    private boolean isFrequencyValid(String frequencyStr) {
-        try {
-            int frequency = Integer.parseInt(frequencyStr);
-            return frequency > 0;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-
     private void addHabit() {
         String name = ((TextField) getComponentAt(0)).getValue();
         LocalDate startDate = ((DatePicker) getComponentAt(1)).getValue();

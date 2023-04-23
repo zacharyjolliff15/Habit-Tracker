@@ -3,11 +3,13 @@ package com.example.application.views;
 import java.util.Random;
 import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.charts.Chart;
 import com.vaadin.flow.component.charts.model.ChartType;
 import com.vaadin.flow.component.charts.model.DataSeries;
 import com.vaadin.flow.component.charts.model.DataSeriesItem;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -19,7 +21,6 @@ import com.vaadin.flow.component.textfield.TextField;
 @PermitAll
 @Route(value = "dashboard", layout = MainLayout.class) // <1>
 @PageTitle("Dashboard | Habit Tracker")
-
 public class DashboardView extends VerticalLayout {
 	/**
 	 * 
@@ -40,6 +41,22 @@ public class DashboardView extends VerticalLayout {
         setDefaultHorizontalComponentAlignment(Alignment.CENTER); // <3>
 
         add(getContactStats(), getCompaniesChart());
+
+        // Add dark mode checkbox at the bottom left corner
+        Checkbox darkModeCheckbox = new Checkbox("Dark Mode");
+        darkModeCheckbox.addValueChangeListener(e -> {
+            if (e.getValue()) {
+                UI.getCurrent().getElement().getThemeList().add("dark");
+            } else {
+                UI.getCurrent().getElement().getThemeList().remove("dark");
+            }
+        });
+        darkModeCheckbox.setWidth("130px");
+        darkModeCheckbox.setHeight("40px");
+        darkModeCheckbox.getStyle().set("position", "absolute");
+        darkModeCheckbox.getStyle().set("left", "10px");
+        darkModeCheckbox.getStyle().set("bottom", "10px");
+        add(darkModeCheckbox);
     }
 
     private Component getContactStats() {
@@ -75,8 +92,7 @@ public class DashboardView extends VerticalLayout {
        };
 
     private void generateRandomMotivationalQuote() {
-    	// Generates a random quote and displays it using quoteTextField
-    	Random random = new Random();
+        Random random = new Random();
         int quoteIndex = random.nextInt(motivationalQuotes.length);
         String randomQuote = motivationalQuotes[quoteIndex];
         quoteTextField.setSizeFull();
