@@ -21,15 +21,11 @@ import com.vaadin.flow.component.textfield.TextField;
 @PageTitle("Dashboard | Habit Tracker")
 
 public class DashboardView extends VerticalLayout {
-	
 	/**
 	 * 
 	 */
-	
 	private static final long serialVersionUID = 1L;
-
 	private final TextField quoteTextField;
-	
     private final CrmService service;
 
     public DashboardView(CrmService service) { // <2>
