@@ -2,22 +2,18 @@ package com.example.application.views;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
+import com.vaadin.flow.component.datepicker.DatePicker;
+import java.time.LocalDate;
+import com.vaadin.flow.component.checkbox.Checkbox;
+
 
 @PermitAll
 @Route(value = "Habit Tracker", layout = MainLayout.class) // <1>
@@ -26,69 +22,99 @@ import jakarta.annotation.security.PermitAll;
 
 public class HabitTracker extends VerticalLayout {
 
-   private Grid<Habit> habitGrid = new Grid<>();
-   private TextField habitName = new TextField("Name");
-   private TextArea habitDescription = new TextArea("Description");
-   private Button addButton = new Button("Add");
-   private Label completionCount = new Label();
-   private Label successPercentage = new Label();
+    /**
+	 * 
+	 */
+	
+	private static final long serialVersionUID = 1L;
+	private final List<Habit> habits = new ArrayList<>();
+    private final Grid<Habit> habitGrid = new Grid<>(Habit.class);
 
-   private List<Habit> habits = new ArrayList<>();
+    public HabitTracker() {
+        habitGrid.setColumns("name", "startDate", "endDate", "frequency", "progress");
+        habitGrid.addComponentColumn(this::buildProgressCheckbox);
+        habitGrid.addComponentColumn(this::buildDeleteButton);
+        habitGrid.setItems(habits);
 
-   public HabitTracker() {
-       // Set up the habit grid
-       habitGrid.addColumn(Habit::getName).setHeader("Name");
-       habitGrid.addColumn(Habit::getDescription).setHeader("Description");
-       habitGrid.addColumn(Habit::getCompletionCount).setHeader("Completion Count");
-       habitGrid.addColumn(Habit::getSuccessPercentage).setHeader("Success Percentage");
+        TextField nameField = new TextField("Habit Name");
+        DatePicker startDatePicker = new DatePicker("Start Date");
+        DatePicker endDatePicker = new DatePicker("End Date");
+        TextField frequencyField = new TextField("Frequency (in days)");
+        Button addButton = new Button("Add Habit", event -> addHabit());
 
-       // Set up the form
-       habitName.setRequired(true);
-       habitDescription.setRequired(true);
+        add(nameField, startDatePicker, endDatePicker, frequencyField, addButton, habitGrid);
+    }
 
-       FormLayout formLayout = new FormLayout();
-       formLayout.add(habitName, habitDescription, addButton);
+    private void addHabit() {
+        String name = ((TextField) getComponentAt(0)).getValue();
+        LocalDate startDate = ((DatePicker) getComponentAt(1)).getValue();
+        LocalDate endDate = ((DatePicker) getComponentAt(2)).getValue();
+        int frequency = Integer.parseInt(((TextField) getComponentAt(3)).getValue());
+        Habit habit = new Habit(name, startDate, endDate, frequency);
+        habits.add(habit);
+        habitGrid.setItems(habits);
+        Notification.show("Habit added!");
+    }
 
-       // Set up the statistics section
-       HorizontalLayout statsLayout = new HorizontalLayout();
-       statsLayout.add(completionCount, successPercentage);
+    private Checkbox buildProgressCheckbox(Habit habit) {
+        Checkbox checkbox = new Checkbox();
+        checkbox.setValue(habit.getProgress().equals("Done"));
+        checkbox.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                habit.setProgress("Done");
+            } else {
+                habit.setProgress("");
+            }
+        });
+        return checkbox;
+    }
 
-       // Add everything to the main layout
-       add(habitGrid, formLayout, statsLayout);
+    private Button buildDeleteButton(Habit habit) {
+        Button button = new Button("Delete", event -> {
+            habits.remove(habit);
+            habitGrid.setItems(habits);
+            Notification.show("Habit deleted!");
+        });
+        return button;
+    }
 
-       // Set up the event listeners
-       addButton.addClickListener(event -> addHabit());
-       habitGrid.asSingleSelect().addValueChangeListener(event -> updateStatistics());
-   }
+    public static class Habit {
+        private String name;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        private int frequency;
+        private String progress;
 
-   private void addHabit() {
-       if (habitName.isEmpty() || habitDescription.isEmpty()) {
-           Notification.show("Please enter a name and description for the habit");
-           return;
-       }
+        public Habit(String name, LocalDate startDate, LocalDate endDate, int frequency) {
+            this.name = name;
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.frequency = frequency;
+            this.progress = "";
+        }
 
-       Habit habit = new Habit(habitName.getValue(), habitDescription.getValue());
-       habits.add(habit);
-       habitGrid.setItems(habits);
+        public String getName() {
+            return name;
+        }
 
-       clearForm();
-       Notification.show("Habit added successfully");
-   }
+        public LocalDate getStartDate() {
+            return startDate;
+        }
 
-   private void updateStatistics() {
-       Habit selectedHabit = habitGrid.asSingleSelect().getValue();
+        public LocalDate getEndDate() {
+            return endDate;
+        }
 
-       if (selectedHabit != null) {
-           completionCount.setText("Completion count: " + selectedHabit.getCompletionCount());
-           successPercentage.setText("Success percentage: " + selectedHabit.getSuccessPercentage() + "%");
-       } else {
-           completionCount.setText("");
-           successPercentage.setText("");
-       }
-   }
+        public int getFrequency() {
+            return frequency;
+        }
 
-   private void clearForm() {
-       habitName.clear();
-       habitDescription.clear();
-   }
+        public String getProgress() {
+            return progress;
+        }
+
+        public void setProgress(String progress) {
+            this.progress = progress;
+        }
+    }
 }

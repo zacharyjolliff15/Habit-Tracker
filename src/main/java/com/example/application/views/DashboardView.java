@@ -8,8 +8,6 @@ import com.vaadin.flow.component.charts.Chart;
 import com.vaadin.flow.component.charts.model.ChartType;
 import com.vaadin.flow.component.charts.model.DataSeries;
 import com.vaadin.flow.component.charts.model.DataSeriesItem;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -23,6 +21,13 @@ import com.vaadin.flow.component.textfield.TextField;
 @PageTitle("Dashboard | Habit Tracker")
 
 public class DashboardView extends VerticalLayout {
+	
+	/**
+	 * 
+	 */
+	
+	private static final long serialVersionUID = 1L;
+
 	private final TextField quoteTextField;
 	
     private final CrmService service;
